@@ -1,22 +1,16 @@
 use config::Config;
 use std::collections::HashMap;
-use serde_json::{Value};
+use serde_json::Value;
+use dirs;
 
 
 fn weatherconfigs() -> HashMap<String, String> {
 
-//     let home_dir = std::env::var_os("HOME");
-//     let my_home = home_dir.unwrap();
-//     let config_name = ".weather.toml";
-//     
-//     let full_path = format!("{}/{}", my_home.into_string(), config_name);
+    let home_dir = dirs::home_dir().expect("Could not find home directory");
+    let config_path = home_dir.join(".weather.toml");
 
     let settings = Config::builder()
-        // Add in `./Settings.toml`
-        .add_source(config::File::with_name("config"))
-        // Add in settings from the environment (with a prefix of APP)
-        // Eg.. `APP_DEBUG=1 ./target/app` would set the `debug` key
-        .add_source(config::Environment::with_prefix("APP"))
+        .add_source(config::File::from(config_path))
         .build()
         .unwrap();
 
